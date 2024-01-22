@@ -80,9 +80,20 @@ function registerUser(name, email, password){
     })
     .then (res => res.json())
     .then(data => {
-     
-        // print user is registred page
+       printRegistredMessage(data)
         })
+}
+
+function printRegistredMessage(data){
+    printLogInForm();
+    let registerMessage = document.createElement('p');
+    registerMessage.innerText = `Användaren ${data.user} med mailen ${data.email} är nu registrerad, vänligen logga in.`;
+
+    userForm.appendChild(registerMessage);
+    setTimeout(() => {
+        registerMessage.innerText ='';
+    }, 5000);
+    
 }
 
 function printLogInForm(){
