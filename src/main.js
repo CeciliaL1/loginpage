@@ -5,6 +5,7 @@ import './styles/style.scss'
  */
 let userForm = document.querySelector('#userForm');
 let registerForm = document.querySelector('#register')
+let imageForm = document.querySelector('#imageForm')
 
 /**
  * Check if there is a user in localStorage
@@ -141,6 +142,7 @@ function getLogInFromAPI(inputEmail, inputPassword){
             printlogOutButton();
             printLoggedInUser(data);
             printDeleteUserButton(data);
+            
         }else {
             alert('fel inlogg')
         }
@@ -192,8 +194,48 @@ function printLoggedInUser(data){
     let loggedInInfo = document.createElement('p');
     loggedInInfo.innerText = `Du är inloggad som ${data.user}`;
     userForm.append(loggedInInfo);
-}
+
+    printFormToUploadImage(data)
     
+   
+}
+
+function printFormToUploadImage(data){
+    let loggedInUser = {email: data.email}
+   
+    imageForm.method = "POST"
+    imageForm.enctype= "multipart/form-data"
+    imageForm.action = 'http://localhost:3000/users/image'
+
+    let imageInput = document.createElement('input');
+    imageInput.type = "file";
+    imageInput.name = "image";
+    let imageButton = document.createElement('button');
+    imageButton.innerHTML = 'skicka bild'
+
+
+   imageForm.append(imageInput,imageButton)
+    imageButton.addEventListener('click', () => {
+        printImage(loggedInUser);
+    })
+   
+}
+
+function printImage(loggedInUser){
+
+    fetch('http://localhost:3000/users/image',{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(loggedInUser)
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log(data)
+    })
+
+}
 
 function printlogOutButton(){
     userForm.innerHTML ='';
