@@ -201,41 +201,37 @@ function printLoggedInUser(data){
 }
 
 function printFormToUploadImage(data){
-    let loggedInUser = {email: data.email}
-   
+    let id = {id: data.id}
     imageForm.method = "POST"
     imageForm.enctype= "multipart/form-data"
-    imageForm.action = 'http://localhost:3000/users/image'
+    imageForm.action = 'http://localhost:3000/users/image';
 
+ 
     let imageInput = document.createElement('input');
     imageInput.type = "file";
     imageInput.name = "image";
     let imageButton = document.createElement('button');
-    imageButton.innerHTML = 'skicka bild'
+    imageButton.innerHTML = 'skicka bild';
 
-
-   imageForm.append(imageInput,imageButton)
-    imageButton.addEventListener('click', () => {
-        printImage(loggedInUser);
-    })
-   
-}
-
-function printImage(loggedInUser){
-
-    fetch('http://localhost:3000/users/image',{
+    imageButton.addEventListener('click', (e) => {
+      
+        fetch('http://localhost:3000/users/image', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(loggedInUser)
+        body: JSON.stringify(id)
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+        })
     })
-    .then(res => res.json())
-    .then(data => {
-        console.log(data)
-    })
+   imageForm.append(imageInput,imageButton)
 
 }
+
+
 
 function printlogOutButton(){
     userForm.innerHTML ='';
