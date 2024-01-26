@@ -12,9 +12,11 @@ let imageForm = document.querySelector('#imageForm')
  */
 if(localStorage.getItem("user")){
     const userInLocalStorage = JSON.parse(localStorage.getItem("user"));
+    console.log('user in localstorage:',userInLocalStorage)
     printlogOutButton()
     printLoggedInUser(userInLocalStorage);
     printDeleteUserButton(userInLocalStorage);
+    printUserImage(userInLocalStorage)
     
 } else {
     printLogInForm()
@@ -98,6 +100,7 @@ function printRegistredMessage(data){
 }
 
 function printLogInForm(){
+    imageForm.innerHTML = '';
     userForm.innerHTML = '';
     registerForm.innerHTML = '';
     let logInHeading = document.createElement('h1');
@@ -136,7 +139,7 @@ function getLogInFromAPI(inputEmail, inputPassword){
     })
     .then(res => res.json())
     .then(data => {
-    
+    console.log('get login',data)
         if(data.user){
             localStorage.setItem("user" , JSON.stringify(data));
             printlogOutButton();
@@ -203,7 +206,6 @@ function printLoggedInUser(data){
 function printFormToUploadImage(data){
     let id = data.id;
 
-
     let imageInput = document.createElement('input');
     imageInput.type = "file";
     imageInput.name = "image";
@@ -213,8 +215,8 @@ function printFormToUploadImage(data){
 
     imageButton.addEventListener('click', (e) => {
       e.preventDefault()
-      let formData = new FormData(imageForm)
-      console.log(formData)
+      let formData = new FormData(imageForm);
+
         fetch('http://localhost:3000/users/image/' + id, {
         method: "POST",
         headers: {
@@ -222,13 +224,30 @@ function printFormToUploadImage(data){
         },
         body: formData
         })
+        .then(res => res.json())
+        .then( data =>{
+            printUserImage()
+          
+        })
     })
    imageForm.append(imageInput,imageButton)
-
+   
 }
 
+function printUserImage(userInLocalStorage){
+ 
+    if(userInLocalStorage.userImage === true){
+        imageForm.innerHTML = ''
+        let img = document.createElement('img');
+        img.src = `.../userimage/${userInLocalStorage.id}.jpg`
 
+        imageForm.appendChild(img)
 
+    } else {
+        printFormToUploadImage(data)
+    }
+
+}
 function printlogOutButton(){
     userForm.innerHTML ='';
 
