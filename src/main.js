@@ -7,11 +7,14 @@ let userForm = document.querySelector('#userForm');
 let registerForm = document.querySelector('#register')
 let imageForm = document.querySelector('#imageForm')
 
+
+const userInLocalStorage = JSON.parse(localStorage.getItem("user"));
+
 /**
  * Check if there is a user in localStorage
  */
 if(localStorage.getItem("user")){
-    const userInLocalStorage = JSON.parse(localStorage.getItem("user"));
+   
     console.log('user in localstorage:',userInLocalStorage)
     printlogOutButton()
     printLoggedInUser(userInLocalStorage);
@@ -198,13 +201,13 @@ function printLoggedInUser(data){
     loggedInInfo.innerText = `Du är inloggad som ${data.user}`;
     userForm.append(loggedInInfo);
 
-    printFormToUploadImage(data)
+    printFormToUploadImage()
     
    
 }
 
-function printFormToUploadImage(data){
-    let id = data.id;
+function printFormToUploadImage(){
+    let id = userInLocalStorage.id;
 
     let imageInput = document.createElement('input');
     imageInput.type = "file";
@@ -234,17 +237,17 @@ function printFormToUploadImage(data){
    
 }
 
-function printUserImage(userInLocalStorage){
+function printUserImage(){
  
     if(userInLocalStorage.userImage === true){
         imageForm.innerHTML = ''
         let img = document.createElement('img');
-        img.src = `.../userimage/${userInLocalStorage.id}.jpg`
+        img.src = `http://localhost:3000/public/image/userimage/${userInLocalStorage.id}.jpg`
 
         imageForm.appendChild(img)
 
     } else {
-        printFormToUploadImage(data)
+        printFormToUploadImage()
     }
 
 }
